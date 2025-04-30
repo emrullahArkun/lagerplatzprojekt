@@ -20,7 +20,6 @@ const formData = ref({
 const sendeDaten = async () => {
   try {
     const response = await axios.post('http://localhost:8000/api/racks/post.php', { ...formData.value })
-    console.log("Daten gesendet:", formData.value)
     console.log("Antwort vom Server",response.data)
     // Eingabedaten zurücksetzen
     form.value.reset()
@@ -35,9 +34,10 @@ const anzahlLagerplaetze = computed(() => {
   return formData.value.reihen * formData.value.tiefe * formData.value.hoehe
 
 })
-
 </script>
 
+
+<!-- Formular -->
 <template>
   <v-sheet class="mx-auto" width="1200" :elevation="30">
     <v-form ref="form" @submit.prevent="sendeDaten" class="align-center">
@@ -98,6 +98,7 @@ const anzahlLagerplaetze = computed(() => {
 </template>
 
 
+<!-- CSS-Style -->
 <style scoped>
 .fixed-size {
   width: 300px; /* Feste Breite für die Textfelder */

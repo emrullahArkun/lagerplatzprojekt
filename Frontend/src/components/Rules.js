@@ -1,3 +1,4 @@
+// Regel für String-Überprüfung
 export const stringRegel = [
     value => {
         if (typeof value === 'string' && value.trim() !== '') {
@@ -7,6 +8,7 @@ export const stringRegel = [
     },
 ];
 
+// Regel für Integer-Überprüfung
 export const integerRegel = [
     value => {
         if (!isNaN(value) && value > 0) {
