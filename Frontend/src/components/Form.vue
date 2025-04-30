@@ -31,7 +31,7 @@ const sendeDaten = async () => {
 
 // Berechnet die Anzahl der Lagerplätze
 const anzahlLagerplaetze = computed(() => {
-  return formData.value.reihen * formData.value.tiefe * formData.value.hoehe
+  return formData.value.reihen * formData.value.felder * formData.value.ebenen
 
 })
 </script>
