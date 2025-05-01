@@ -8,6 +8,11 @@ $baseDir = dirname($vendorDir);
 return array(
     'Attribute' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
+    'IdiormMethodMissingException' => $vendorDir . '/j4mie/idiorm/idiorm.php',
+    'IdiormResultSet' => $vendorDir . '/j4mie/idiorm/idiorm.php',
+    'IdiormString' => $vendorDir . '/j4mie/idiorm/idiorm.php',
+    'IdiormStringException' => $vendorDir . '/j4mie/idiorm/idiorm.php',
+    'ORM' => $vendorDir . '/j4mie/idiorm/idiorm.php',
     'PhpToken' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/PhpToken.php',
     'Stringable' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/Stringable.php',
     'UnhandledMatchError' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/UnhandledMatchError.php',

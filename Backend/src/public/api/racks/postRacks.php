@@ -5,17 +5,19 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Factory\AppFactory;
 
 require __DIR__ . '/../../../../vendor/autoload.php';
+require __DIR__ . '/../../../tables.php';
 
 $app = AppFactory::create();
 
+$endpoint = '/api/racks/postRacks.php';
 // Definieren der Header Bedingungen (CORS, Anfragemethoden, etc.)
 $app->add(function ($request, $handler) {
     $response = $handler->handle($request);
     return $response
         // CORS Header für Server
-        ->withHeader('Access-Control-Allow-Origin', 'http://localhost:8001')
+        ->withHeader('Access-Control-Allow-Origin', '*')
         // Header für Preflight-Anfragen
-        ->withHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
+        ->withHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
         // Header für die erlaubten Header
         ->withHeader('Access-Control-Allow-Headers', 'Content-Type')
         // Header für den Content-Type
@@ -23,7 +25,7 @@ $app->add(function ($request, $handler) {
 });
 
 // OPTIONS Route für Preflight-Anfragen
-$app->options('/api/racks/add.php', function (Request $request, Response $response) {
+$app->options($endpoint, function (Request $request, Response $response) {
     return $response;
 });
 
@@ -31,10 +33,9 @@ $app->options('/api/racks/add.php', function (Request $request, Response $respon
 $app->addBodyParsingMiddleware();
 
 // POST Route zum Empfangen der Daten
-$app->post('/api/racks/add.php', function (Request $request, Response $response) {
+$app->post($endpoint, function (Request $request, Response $response) {
     // JSON-Daten empfangen
     $data = $request->getParsedBody();
-
     $regalbezeichnung = $data['regalbezeichnung'] ?? null;
     $reihen = $data['reihen'] ?? null;
     $felder = $data['felder'] ?? null;
@@ -43,25 +44,33 @@ $app->post('/api/racks/add.php', function (Request $request, Response $response)
     $tiefe = $data['tiefe'] ?? null;
     $hoehe = $data['hoehe'] ?? null;
 
-    #$main_table = ORM::forTable([$regalbezeichnung])->create();
-    #$main_table->regalbezeichnung = $regalbezeichnung;
-    #$main_table->reihen = $reihen;
-    #$main_table->felder = $felder;
-    #$main_table->ebenen = $ebenen;
-    #$main_table->breite = $breite;
-    #$main_table->tiefe = $tiefe;
-    #$main_table->hoehe = $hoehe;
-    #$main_table->save();
+    erstelleTabellen("regaldaten", "{$regalbezeichnung}_lagerplatznamen");
+
+    // Konfiguration der Datenbankverbindung
+    ORM::configure('pgsql:host=localhost;port=5432;dbname=postgres');
+    ORM::configure('username', 'postgres');
+    ORM::configure('password', 'admin');
+
+    // Datensatz erstellen
+    $main_table = ORM::forTable("regaldaten")->create();
+    $main_table->regalbezeichnung = $regalbezeichnung;
+    $main_table->reihen = $reihen;
+    $main_table->felder = $felder;
+    $main_table->ebenen = $ebenen;
+    $main_table->breite = $breite;
+    $main_table->tiefe = $tiefe;
+    $main_table->hoehe = $hoehe;
+    $main_table->save();
 
     // ID generieren und Datenbankeintrag erstellen
     for ($reihe = 0; $reihe < $reihen; $reihe++) {
         for ($feld = 0; $feld < $felder; $feld++) {
             for ($ebene = 0; $ebene < $ebenen; $ebene++) {
                 $id = "{$regalbezeichnung}-" . formatiereEinstellig($reihe) . "-" . formatiereEinstellig($feld) . "-" . formatiereEinstellig($ebene);
-                #$lagerplatz = ORM::forTable($regalbezeichnung . '_Lagerplatznamen')->create();
-                #$lagerplatz->id = $id;
-                #$lagerplatz->konstant_id = $main_table->id;
-                #$lagerplatz->save();
+                $lagerplatz = ORM::forTable(strtolower($regalbezeichnung) . '_lagerplatznamen')->create();
+                $lagerplatz->id = $id;
+                $lagerplatz->konstant_id = $main_table->id;
+                $lagerplatz->save();
             }
         }
     }
@@ -79,6 +88,9 @@ $app->post('/api/racks/add.php', function (Request $request, Response $response)
     return $response->withStatus(200);
 });
 
+
+
+// Funktion zum Formatieren von einstelligen Zahlen
 function formatiereEinstellig($zahl): string
 {
     if ($zahl >= 0 && $zahl <= 9) {

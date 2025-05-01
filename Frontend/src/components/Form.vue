@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed} from 'vue'
 import { stringRegel, integerRegel } from './Rules.js'
 
 // Definiere die Variablen für die Eingabefelder
@@ -14,10 +14,12 @@ const formData = ref({
   tiefe: ''
 })
 
+const emit = defineEmits(['form-submitted'])
+
 // Sendet die Daten an den Server
 const sendeDaten = async () => {
   try {
-    const response = await fetch('http://localhost:8000/api/racks/add.php', {
+    const response = await fetch('http://localhost:8000/api/racks/postRacks.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -34,6 +36,7 @@ const sendeDaten = async () => {
     console.log("Antwort vom Server", responseData)
     form.value.reset()
     form.value.resetValidation()
+    emit("form-submitted")
   } catch (error) {
     console.error('Fehler beim Senden der Daten:', error)
   }
