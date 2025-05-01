@@ -1,10 +1,9 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { stringRegel, integerRegel } from './Rules.js'
-import axios  from "axios";
 
 // Definiere die Variablen für die Eingabefelder
-const form = ref()
+const form = ref(null)
 const formData = ref({
   regalbezeichnung: '',
   reihen: '',
@@ -15,13 +14,24 @@ const formData = ref({
   tiefe: ''
 })
 
-
 // Sendet die Daten an den Server
 const sendeDaten = async () => {
   try {
-    const response = await axios.post('http://localhost:8000/api/racks/post.php', { ...formData.value })
-    console.log("Antwort vom Server",response.data)
-    // Eingabedaten zurücksetzen
+    const response = await fetch('http://localhost:8000/api/racks/add.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ ...formData.value })
+    })
+
+    if (!response.ok) {
+      const errorText = await response.text()
+      throw new Error(`Fehler beim Senden der Daten: ${response.status} - ${errorText}`)
+    }
+
+    const responseData = await response.json()
+    console.log("Antwort vom Server", responseData)
     form.value.reset()
     form.value.resetValidation()
   } catch (error) {
@@ -29,18 +39,25 @@ const sendeDaten = async () => {
   }
 }
 
+// Funktion, die beim Absenden des Formulars aufgerufen wird
+const submitForm = async () => {
+  if (form.value) {
+    const { valid } = await form.value.validate()
+    if (valid) {
+      await sendeDaten()
+    }
+  }
+}
+
 // Berechnet die Anzahl der Lagerplätze
 const anzahlLagerplaetze = computed(() => {
   return formData.value.reihen * formData.value.felder * formData.value.ebenen
-
 })
 </script>
 
-
-<!-- Formular -->
 <template>
   <v-sheet class="mx-auto" width="1200" :elevation="30">
-    <v-form ref="form" @submit.prevent="sendeDaten" class="align-center">
+    <v-form ref="form" @submit.prevent="submitForm" class="align-center">
       <v-text-field
           v-model="formData.regalbezeichnung"
           :rules="stringRegel"
@@ -65,7 +82,6 @@ const anzahlLagerplaetze = computed(() => {
           label="Ebene(en) pro Feld"
       ></v-text-field>
 
-      <!-- Flexbox-Container für Breite, Tiefe und Höhe -->
       <div class="dimension-row">
         <v-text-field
             v-model="formData.breite"
@@ -97,8 +113,6 @@ const anzahlLagerplaetze = computed(() => {
   </v-sheet>
 </template>
 
-
-<!-- CSS-Style -->
 <style scoped>
 .fixed-size {
   width: 300px; /* Feste Breite für die Textfelder */

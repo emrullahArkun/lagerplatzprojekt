@@ -2,7 +2,22 @@
 <module type="WEB_MODULE" version="4">
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
-    <content url="file://$MODULE_DIR$" />
+    <content url="file://$MODULE_DIR$">
+      <excludeFolder url="file://$MODULE_DIR$/Backend/vendor/composer" />
+      <excludeFolder url="file://$MODULE_DIR$/Backend/vendor/nikic/fast-route" />
+      <excludeFolder url="file://$MODULE_DIR$/Backend/vendor/psr/container" />
+      <excludeFolder url="file://$MODULE_DIR$/Backend/vendor/psr/http-factory" />
+      <excludeFolder url="file://$MODULE_DIR$/Backend/vendor/psr/http-message" />
+      <excludeFolder url="file://$MODULE_DIR$/Backend/vendor/psr/http-server-handler" />
+      <excludeFolder url="file://$MODULE_DIR$/Backend/vendor/psr/http-server-middleware" />
+      <excludeFolder url="file://$MODULE_DIR$/Backend/vendor/psr/log" />
+      <excludeFolder url="file://$MODULE_DIR$/Backend/vendor/slim/slim" />
+      <excludeFolder url="file://$MODULE_DIR$/Backend/vendor/fig/http-message-util" />
+      <excludeFolder url="file://$MODULE_DIR$/Backend/vendor/nyholm/psr7" />
+      <excludeFolder url="file://$MODULE_DIR$/Backend/vendor/ralouphie/getallheaders" />
+      <excludeFolder url="file://$MODULE_DIR$/Backend/vendor/slim/psr7" />
+      <excludeFolder url="file://$MODULE_DIR$/Backend/vendor/symfony/polyfill-php80" />
+    </content>
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>
