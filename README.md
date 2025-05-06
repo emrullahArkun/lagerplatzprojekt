@@ -45,10 +45,21 @@ Die Lagerplätze werden anhand der eingegebenen Daten berechnet und in der Daten
     psql -h localhost -p 5432 -U postgres -d postgres
     ```
 
-   Gib als Passwort `admin` ein, wenn du dazu aufgefordert wirst.
+   Gib als Passwort `admin` ein.
 
 ---
 ## Anwendung im Browser öffnen
 
 Nach dem Start aller Dienste kannst du die Webanwendung im Browser unter  
 **http://localhost:8001** aufrufen.
+
+# Lagerplätze eines Lagers abrufen
+
+Um die Lagerplätze eines bestimmten Lagers aus der Datenbank abzurufen, kannst du folgenden SQL-Query im PostgreSQL-Server ausführen. Ersetze dabei `<Name des Lagers>` 
+durch den tatsächlichen Namen (Query in einer Zeile ausführen!):
+
+```
+SELECT d.id, k.regalbezeichnung, k.reihen, k.felder, k.ebenen, k.breite, k.tiefe, k.hoehe
+FROM <Name des Lagers> d
+JOIN regaldaten k ON d.konstant_id = k.id;
+```

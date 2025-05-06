@@ -5,8 +5,6 @@ import Form from './components/Form.vue'
 <template>
   <div>
     <h1 class="text-center">Regal-Lagersystem</h1>
-    <Form class="mt-5" @form-submitted="handleFormSubmit" />
-    <div v-if="showTable" class="mt-5">
-    </div>
+    <Form class="mt-5"/>
   </div>
 </template>

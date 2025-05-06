@@ -14,8 +14,6 @@ const formData = ref({
   tiefe: ''
 })
 
-const emit = defineEmits(['form-submitted'])
-
 // Sendet die Daten an den Server
 const sendeDaten = async () => {
   try {
@@ -24,6 +22,7 @@ const sendeDaten = async () => {
       headers: {
         'Content-Type': 'application/json'
       },
+      // Umwandlung der Daten in JSON
       body: JSON.stringify({ ...formData.value })
     })
 
@@ -34,9 +33,9 @@ const sendeDaten = async () => {
 
     const responseData = await response.json()
     console.log("Antwort vom Server", responseData)
+    // Formular zurücksetzen
     form.value.reset()
     form.value.resetValidation()
-    emit("form-submitted")
   } catch (error) {
     console.error('Fehler beim Senden der Daten:', error)
   }
